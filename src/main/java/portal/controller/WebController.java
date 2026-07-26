@@ -1,0 +1,140 @@
+package portal.controller;
+import jakarta.validation.Valid;
+import portal.model.Student;
+import portal.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+import portal.service.AttendanceService;
+import portal.service.MarksService;
+import portal.service.OutpassService;
+
+@Controller
+public class WebController {
+
+    @Autowired
+    private StudentService studentService;
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam String email,
+                               @RequestParam String password,
+                               HttpSession session,
+                               Model model) {
+        try {
+            Student student = studentService.loginStudent(email, password);
+            session.setAttribute("loggedInStudentId", student.getId());
+            session.setAttribute("studentName", student.getName());
+            session.setAttribute("role", student.getRole());
+
+            if ("FACULTY".equals(student.getRole())) {
+                return "redirect:/faculty";
+            }
+            return "redirect:/dashboard";
+
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Invalid email or password");
+            return "login";
+        }
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register";
+    }
+    @Autowired
+    private AttendanceService attendanceService;
+
+    @Autowired
+    private MarksService marksService;
+    @GetMapping("/faculty/register")
+    public String facultyRegisterPage() {
+        return "faculty-register";
+    }
+
+    @PostMapping("/faculty/register")
+    public String processFacultyRegister(@RequestParam String name,
+                                         @RequestParam String rollNumber,
+                                         @RequestParam String department,
+                                         @RequestParam String email,
+                                         @RequestParam String password,
+                                         Model model) {
+        try {
+            Student faculty = new Student();
+            faculty.setName(name);
+            faculty.setRollNumber(rollNumber);
+            faculty.setDepartment(department);
+            faculty.setEmail(email);
+            faculty.setPassword(password);
+            faculty.setRole("FACULTY");
+            studentService.registerStudent(faculty);
+            return "redirect:/login";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Registration failed. Email or roll number may already be in use.");
+            return "faculty-register";
+        }
+    }
+
+    @Autowired
+    private OutpassService outpassService;
+
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session, Model model) {
+        Long studentId = (Long) session.getAttribute("loggedInStudentId");
+
+        if (studentId == null) {
+            return "redirect:/login";
+        }
+
+        String studentName = (String) session.getAttribute("studentName");
+        double attendancePercentage = attendanceService.calculateAttendancePercentage(studentId);
+
+        model.addAttribute("studentName", studentName);
+        model.addAttribute("attendancePercentage", attendancePercentage);
+        model.addAttribute("marksList", marksService.getMarksForStudent(studentId));
+        model.addAttribute("outpassList", outpassService.getOutpassForStudent(studentId));
+
+        return "dashboard";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
+    @PostMapping("/register")
+    public Student register(@Valid @RequestBody Student student) {
+        return studentService.registerStudent(student);
+    }
+    public String processRegister(@RequestParam String name,
+                                  @RequestParam String rollNumber,
+                                  @RequestParam String department,
+                                  @RequestParam String email,
+                                  @RequestParam String password,
+                                  Model model) {
+        try {
+            Student student = new Student();
+            student.setName(name);
+            student.setRollNumber(rollNumber);
+            student.setDepartment(department);
+            student.setEmail(email);
+            student.setPassword(password);
+            studentService.registerStudent(student);
+            return "redirect:/login";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Registration failed. Email or roll number may already be in use.");
+            return "register";
+        }
+    }
+}

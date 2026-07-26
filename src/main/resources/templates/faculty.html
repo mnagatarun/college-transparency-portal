@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Portal - College Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand mb-0 h1">Faculty Portal - <span th:text="${facultyName}"></span></span>
+    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+</nav>
+
+<div class="container mt-4 mb-5">
+
+    <div class="row">
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Mark Attendance</h5>
+                    <form th:action="@{/faculty/attendance/mark}" method="post">
+                        <select name="studentId" class="form-select mb-2" required>
+                            <option value="">Select Student</option>
+                            <option th:each="s : ${studentList}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'"></option>
+                        </select>
+                        <input type="text" name="subject" class="form-control mb-2" placeholder="Subject" required>
+                        <input type="date" name="date" class="form-control mb-2" required>
+                        <select name="status" class="form-select mb-2" required>
+                            <option value="PRESENT">Present</option>
+                            <option value="ABSENT">Absent</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100">Mark Attendance</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Add / Update Marks</h5>
+                    <form th:action="@{/faculty/marks/add}" method="post">
+                        <select name="studentId" class="form-select mb-2" required>
+                            <option value="">Select Student</option>
+                            <option th:each="s : ${studentList}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'"></option>
+                        </select>
+                        <input type="text" name="subject" class="form-control mb-2" placeholder="Subject" required>
+                        <select name="examType" class="form-select mb-2" required>
+                            <option value="MID1">MID1</option>
+                            <option value="MID2">MID2</option>
+                        </select>
+                        <input type="number" step="0.5" name="marksObtained" class="form-control mb-2" placeholder="Marks Obtained" required>
+                        <input type="number" step="0.5" name="maxMarks" class="form-control mb-2" placeholder="Max Marks" required>
+                        <input type="hidden" name="changedBy" th:value="${facultyName}">
+                        <button type="submit" class="btn btn-success w-100">Save Marks</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Pending Outpass Requests</h5>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${pendingOutpass}">
+                    <td th:text="${o.student.name}"></td>
+                    <td th:text="${o.reason}"></td>
+                    <td>
+                        <span th:text="${o.status}"
+                              th:class="${o.status == 'PENDING_URGENT'} ? 'badge bg-danger' : 'badge bg-warning'"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{'/faculty/outpass/approve/' + ${o.id}}" method="post" style="display:inline;">
+                            <input type="hidden" name="approvedBy" th:value="${facultyName}">
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form th:action="@{'/faculty/outpass/reject/' + ${o.id}}" method="post" style="display:inline;">
+                            <input type="hidden" name="approvedBy" th:value="${facultyName}">
+                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pendingOutpass)}">
+                    <td colspan="4" class="text-muted">No pending outpass requests.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Submission Tracking</h5>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Title</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="sub : ${submissionDashboard}">
+                    <td th:text="${sub.student.name}"></td>
+                    <td th:text="${sub.title}"></td>
+                    <td th:text="${sub.dueDate}"></td>
+                    <td>
+                        <span th:text="${sub.status}"
+                              th:class="${sub.status == 'OVERDUE'} ? 'badge bg-danger' : 'badge bg-warning'"></span>
+                    </td>
+                    <td>
+                        <form th:if="${sub.status == 'SUBMITTED'}" th:action="@{'/faculty/submissions/verify/' + ${sub.id}}" method="post">
+                            <input type="hidden" name="verifiedBy" th:value="${facultyName}">
+                            <button type="submit" class="btn btn-sm btn-primary">Verify</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(submissionDashboard)}">
+                    <td colspan="5" class="text-muted">No submissions to track.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

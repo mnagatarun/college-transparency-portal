@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - College Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand mb-0 h1">College Portal</span>
+    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+</nav>
+
+<div class="container mt-4">
+
+    <h3>Welcome, <span th:text="${studentName}">Student</span></h3>
+
+    <div class="row mt-4">
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Attendance</h5>
+                    <p class="display-6" th:text="${#numbers.formatDecimal(attendancePercentage, 1, 2)} + '%'">0%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Marks</h5>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Exam</th>
+                            <th>Marks</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="mark : ${marksList}">
+                            <td th:text="${mark.subject}"></td>
+                            <td th:text="${mark.examType}"></td>
+                            <td th:text="${mark.marksObtained} + ' / ' + ${mark.maxMarks}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(marksList)}">
+                            <td colspan="3" class="text-muted">No marks recorded yet.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Outpass Requests</h5>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>Reason</th>
+                    <th>Out Time</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="outpass : ${outpassList}">
+                    <td th:text="${outpass.reason}"></td>
+                    <td th:text="${outpass.outTime}"></td>
+                    <td>
+                        <span th:text="${outpass.status}"
+                              th:class="${outpass.status == 'APPROVED'} ? 'badge bg-success' : (${outpass.status == 'REJECTED'} ? 'badge bg-danger' : 'badge bg-warning')">
+                        </span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(outpassList)}">
+                    <td colspan="3" class="text-muted">No outpass requests yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

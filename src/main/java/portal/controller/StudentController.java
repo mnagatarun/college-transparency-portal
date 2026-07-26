@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import jakarta.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -16,7 +17,7 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/register")
-    public Student register(@RequestBody Student student) {
+    public Student register(@Valid @RequestBody Student student) {
         return studentService.registerStudent(student);
     }
 
