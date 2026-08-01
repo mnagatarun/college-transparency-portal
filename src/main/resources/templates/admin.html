@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal - College Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand mb-0 h1">Admin Portal - <span th:text="${adminName}"></span></span>
+    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+</nav>
+
+<div class="container mt-4 mb-5">
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Create Faculty Account</h5>
+            <form th:action="@{/admin/faculty/create}" method="post" class="row g-2">
+                <div class="col-md-4"><input type="text" name="name" class="form-control" placeholder="Full Name" required></div>
+                <div class="col-md-2"><input type="text" name="facultyId" class="form-control" placeholder="Faculty ID" required></div>
+                <div class="col-md-2"><input type="text" name="department" class="form-control" placeholder="Department" required></div>
+                <div class="col-md-2"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
+                <div class="col-md-1"><input type="password" name="password" class="form-control" placeholder="Password" required></div>
+                <div class="col-md-1"><button type="submit" class="btn btn-success w-100">Add</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">All Users</h5>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${allUsers}">
+                    <td th:text="${u.name}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td><span class="badge bg-secondary" th:text="${u.role}"></span></td>
+                    <td>
+                        <span th:text="${u.enabled} ? 'Active' : 'Disabled'"
+                              th:class="${u.enabled} ? 'badge bg-success' : 'badge bg-danger'"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{'/admin/toggle/' + ${u.id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-outline-warning">
+                                <span th:text="${u.enabled} ? 'Disable' : 'Enable'"></span>
+                            </button>
+                        </form>
+                        <form th:action="@{'/admin/reset-password/' + ${u.id}}" method="post" style="display:inline;">
+                            <input type="password" name="newPassword" placeholder="New password" style="width:120px; display:inline;" class="form-control form-control-sm d-inline" required>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Reset</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Global Marks Audit Log</h5>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>Marks ID</th>
+                    <th>Old Value</th>
+                    <th>New Value</th>
+                    <th>Changed By</th>
+                    <th>Changed At</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log : ${auditLogs}">
+                    <td th:text="${log.marksId}"></td>
+                    <td th:text="${log.oldValue}"></td>
+                    <td th:text="${log.newValue}"></td>
+                    <td th:text="${log.changedBy}"></td>
+                    <td th:text="${log.changedAt}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(auditLogs)}">
+                    <td colspan="5" class="text-muted">No audit entries yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 package portal.service;
-
+import org.springframework.scheduling.annotation.Scheduled;
 import portal.model.Submission;
 import portal.model.Student;
 import portal.repository.SubmissionRepository;
@@ -10,7 +10,17 @@ import java.util.List;
 
 @Service
 public class SubmissionService {
+    @Scheduled(fixedRate = 3600000)
+    public void autoFlagOverdueSubmissions() {
+        List<Submission> pending = submissionRepository.findByStatus("PENDING");
 
+        for (Submission s : pending) {
+            if (s.getDueDate().isBefore(LocalDate.now())) {
+                s.setStatus("OVERDUE");
+                submissionRepository.save(s);
+            }
+        }
+    }
     @Autowired
     private SubmissionRepository submissionRepository;
 

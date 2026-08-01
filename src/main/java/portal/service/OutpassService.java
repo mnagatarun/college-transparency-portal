@@ -1,6 +1,7 @@
 package portal.service;
-
+import org.springframework.scheduling.annotation.Scheduled;
 import portal.model.Outpass;
+import lombok.extern.slf4j.Slf4j;
 import portal.model.Student;
 import portal.repository.OutpassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,22 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@Slf4j
 public class OutpassService {
+    @Scheduled(fixedRate = 3600000)
+    public void autoEscalatePendingOutpass() {
+        List<Outpass> pending = outpassRepository.findByStatus("PENDING");
 
+        for (Outpass o : pending) {
+            long hoursWaiting = ChronoUnit.HOURS.between(o.getRequestedAt(), LocalDateTime.now());
+            if (hoursWaiting >= ESCALATION_HOURS) {
+                o.setStatus("PENDING_URGENT");
+                outpassRepository.save(o);
+                log.warn("Outpass auto-escalated to urgent - id: {}, student: {}, hoursWaiting: {}",
+                        o.getId(), o.getStudent().getName(), hoursWaiting);
+            }
+        }
+    }
     @Autowired
     private OutpassRepository outpassRepository;
 
@@ -41,6 +56,9 @@ public class OutpassService {
         outpass.setApprovedBy(approvedBy);
         outpass.setApprovedAt(LocalDateTime.now());
 
+        log.info("Outpass approved - id: {}, student: {}, approvedBy: {}",
+                outpassId, outpass.getStudent().getName(), approvedBy);
+
         return outpassRepository.save(outpass);
     }
 
@@ -51,6 +69,9 @@ public class OutpassService {
         outpass.setStatus("REJECTED");
         outpass.setApprovedBy(approvedBy);
         outpass.setApprovedAt(LocalDateTime.now());
+
+        log.info("Outpass rejected - id: {}, student: {}, rejectedBy: {}",
+                outpassId, outpass.getStudent().getName(), approvedBy);
 
         return outpassRepository.save(outpass);
     }

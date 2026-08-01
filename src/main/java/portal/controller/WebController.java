@@ -38,13 +38,16 @@ public class WebController {
             session.setAttribute("studentName", student.getName());
             session.setAttribute("role", student.getRole());
 
+            if ("ADMIN".equals(student.getRole())) {
+                return "redirect:/admin";
+            }
             if ("FACULTY".equals(student.getRole())) {
                 return "redirect:/faculty";
             }
             return "redirect:/dashboard";
 
         } catch (RuntimeException e) {
-            model.addAttribute("error", "Invalid email or password");
+            model.addAttribute("error", e.getMessage());
             return "login";
         }
     }
@@ -58,34 +61,6 @@ public class WebController {
 
     @Autowired
     private MarksService marksService;
-    @GetMapping("/faculty/register")
-    public String facultyRegisterPage() {
-        return "faculty-register";
-    }
-
-    @PostMapping("/faculty/register")
-    public String processFacultyRegister(@RequestParam String name,
-                                         @RequestParam String rollNumber,
-                                         @RequestParam String department,
-                                         @RequestParam String email,
-                                         @RequestParam String password,
-                                         Model model) {
-        try {
-            Student faculty = new Student();
-            faculty.setName(name);
-            faculty.setRollNumber(rollNumber);
-            faculty.setDepartment(department);
-            faculty.setEmail(email);
-            faculty.setPassword(password);
-            faculty.setRole("FACULTY");
-            studentService.registerStudent(faculty);
-            return "redirect:/login";
-        } catch (RuntimeException e) {
-            model.addAttribute("error", "Registration failed. Email or roll number may already be in use.");
-            return "faculty-register";
-        }
-    }
-
     @Autowired
     private OutpassService outpassService;
 

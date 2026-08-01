@@ -1,6 +1,7 @@
 package portal.service;
 
 import portal.model.Marks;
+import lombok.extern.slf4j.Slf4j;
 import portal.model.MarksAuditLog;
 import portal.model.Student;
 import portal.repository.MarksRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class MarksService {
 
     @Autowired
@@ -33,13 +35,16 @@ public class MarksService {
             Marks marks = existing.get();
             Double oldValue = marks.getMarksObtained();
 
-            MarksAuditLog log = new MarksAuditLog();
-            log.setMarksId(marks.getId());
-            log.setOldValue(oldValue);
-            log.setNewValue(marksObtained);
-            log.setChangedBy(changedBy);
-            log.setChangedAt(LocalDateTime.now());
-            auditLogRepository.save(log);
+            MarksAuditLog log2 = new MarksAuditLog();
+            log2.setMarksId(marks.getId());
+            log2.setOldValue(oldValue);
+            log2.setNewValue(marksObtained);
+            log2.setChangedBy(changedBy);
+            log2.setChangedAt(LocalDateTime.now());
+            auditLogRepository.save(log2);
+
+            log.info("Marks updated - studentId: {}, subject: {}, examType: {}, {} -> {}, changedBy: {}",
+                    studentId, subject, examType, oldValue, marksObtained, changedBy);
 
             marks.setMarksObtained(marksObtained);
             marks.setMaxMarks(maxMarks);
@@ -56,13 +61,16 @@ public class MarksService {
             marks.setMaxMarks(maxMarks);
             Marks saved = marksRepository.save(marks);
 
-            MarksAuditLog log = new MarksAuditLog();
-            log.setMarksId(saved.getId());
-            log.setOldValue(null);
-            log.setNewValue(marksObtained);
-            log.setChangedBy(changedBy);
-            log.setChangedAt(LocalDateTime.now());
-            auditLogRepository.save(log);
+            MarksAuditLog log2 = new MarksAuditLog();
+            log2.setMarksId(saved.getId());
+            log2.setOldValue(null);
+            log2.setNewValue(marksObtained);
+            log2.setChangedBy(changedBy);
+            log2.setChangedAt(LocalDateTime.now());
+            auditLogRepository.save(log2);
+
+            log.info("New marks entry created - studentId: {}, subject: {}, examType: {}, value: {}, changedBy: {}",
+                    studentId, subject, examType, marksObtained, changedBy);
 
             return saved;
         }

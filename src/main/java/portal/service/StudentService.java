@@ -1,13 +1,14 @@
 package portal.service;
 
 import portal.model.Student;
+import lombok.extern.slf4j.Slf4j;
 import portal.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
 @Service
+@Slf4j
 public class StudentService {
 
     @Autowired
@@ -19,7 +20,9 @@ public class StudentService {
     public Student registerStudent(Student student) {
         String hashedPassword = passwordEncoder.encode(student.getPassword());
         student.setPassword(hashedPassword);
-        return studentRepository.save(student);
+        Student saved = studentRepository.save(student);
+        log.info("New student registered: {} (roll number: {})", saved.getEmail(), saved.getRollNumber());
+        return saved;
     }
 
     public List<Student> getAllStudents() {
@@ -33,11 +36,22 @@ public class StudentService {
 
     public Student loginStudent(String email, String rawPassword) {
         Student student = studentRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> {
+                    log.warn("Login attempt failed - email not found: {}", email);
+                    return new RuntimeException("Invalid email or password");
+                });
 
         if (!passwordEncoder.matches(rawPassword, student.getPassword())) {
+            log.warn("Login attempt failed - incorrect password for email: {}", email);
             throw new RuntimeException("Invalid email or password");
         }
+
+        if (!student.isEnabled()) {
+            log.warn("Login attempt blocked - disabled account: {}", email);
+            throw new RuntimeException("This account has been disabled. Contact admin.");
+        }
+
+        log.info("Successful login: {} (role: {})", email, student.getRole());
         return student;
     }
 }

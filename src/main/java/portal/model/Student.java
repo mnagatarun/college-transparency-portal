@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
 @Entity
 @Table(name = "students")
 @Data
@@ -32,4 +37,6 @@ public class Student {
     private String password;
 
     private String role = "STUDENT";
+
+    private boolean enabled = true;
 }
