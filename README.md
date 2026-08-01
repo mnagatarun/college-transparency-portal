@@ -1,3 +1,5 @@
+## Live Demo
+https://college-transparency-portal.onrender.com
 # College Transparency Portal
 
 A full-stack web application built to solve real transparency problems at my college — manual attendance tracking, no way to verify marks after distribution, manual outpass approval, and untracked lab record submissions.
