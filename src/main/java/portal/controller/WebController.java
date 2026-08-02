@@ -8,10 +8,48 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import portal.service.AttendanceService;
 import portal.service.MarksService;
+import portal.service.PasswordResetService;
 import portal.service.OutpassService;
 
 @Controller
 public class WebController {
+    @Autowired
+    private PasswordResetService passwordResetService;
+
+    @GetMapping("/forgot-password")
+    public String forgotPasswordPage() {
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam String email, Model model) {
+        try {
+            passwordResetService.sendResetLink(email);
+            model.addAttribute("message", "Reset link sent to your email.");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            model.addAttribute("message", "If that email exists, a reset link was sent.");
+        }
+        return "forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPasswordPage(@RequestParam String token, Model model) {
+        model.addAttribute("token", token);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam String token, @RequestParam String newPassword, Model model) {
+        try {
+            passwordResetService.resetPassword(token, newPassword);
+            return "redirect:/login";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("token", token);
+            return "reset-password";
+        }
+    }
 
     @Autowired
     private StudentService studentService;

@@ -37,6 +37,7 @@ public class Student {
     private String password;
 
     private String role = "STUDENT";
-
+    private String resetToken;
+    private java.time.LocalDateTime resetTokenExpiry;
     private boolean enabled = true;
 }

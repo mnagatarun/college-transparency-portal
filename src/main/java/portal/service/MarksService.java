@@ -30,7 +30,9 @@ public class MarksService {
 
         Optional<Marks> existing = marksRepository
                 .findByStudentIdAndSubjectAndExamType(studentId, subject, examType);
-
+        if (marksObtained < 0 || maxMarks < 0 || marksObtained > maxMarks) {
+            throw new RuntimeException("Invalid marks: obtained cannot exceed max, and neither can be negative");
+        }
         if (existing.isPresent()) {
             Marks marks = existing.get();
             Double oldValue = marks.getMarksObtained();

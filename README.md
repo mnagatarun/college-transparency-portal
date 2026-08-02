@@ -79,7 +79,8 @@ mvn spring-boot:run
 - Faculty account creation is via an unlisted registration URL rather than admin-restricted creation — a pragmatic simplification for project scope
 - Outpass escalation checks trigger on read (when the pending list is fetched) rather than via a background scheduled job
 - No automated test suite yet (manual testing via Postman was used throughout development)
-
+## Note
+- Early commit history contains a local development database password (since rotated); production credentials were always managed via environment variables and were never committed.
 ## Author
 
 Munnaluri Naga Tarun — B.Tech CSE, Prasad V. Potluri Siddhartha Institute of Technology

@@ -1,12 +1,15 @@
 package portal.service;
 
 import portal.model.Student;
-import lombok.extern.slf4j.Slf4j;
 import portal.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Service
 @Slf4j
 public class StudentService {
@@ -16,6 +19,8 @@ public class StudentService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private final Map<String, Integer> failedAttempts = new ConcurrentHashMap<>();
 
     public Student registerStudent(Student student) {
         String hashedPassword = passwordEncoder.encode(student.getPassword());
@@ -35,6 +40,12 @@ public class StudentService {
     }
 
     public Student loginStudent(String email, String rawPassword) {
+
+        int attempts = failedAttempts.getOrDefault(email, 0);
+        if (attempts >= 5) {
+            throw new RuntimeException("Too many failed attempts. Try again later.");
+        }
+
         Student student = studentRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn("Login attempt failed - email not found: {}", email);
@@ -43,6 +54,7 @@ public class StudentService {
 
         if (!passwordEncoder.matches(rawPassword, student.getPassword())) {
             log.warn("Login attempt failed - incorrect password for email: {}", email);
+            failedAttempts.merge(email, 1, Integer::sum);
             throw new RuntimeException("Invalid email or password");
         }
 
@@ -51,6 +63,7 @@ public class StudentService {
             throw new RuntimeException("This account has been disabled. Contact admin.");
         }
 
+        failedAttempts.remove(email);
         log.info("Successful login: {} (role: {})", email, student.getRole());
         return student;
     }

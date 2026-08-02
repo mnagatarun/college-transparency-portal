@@ -2,6 +2,7 @@ package portal.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "marks")
@@ -20,7 +21,9 @@ public class Marks {
 
     private String examType;
 
+    @PositiveOrZero(message = "Marks obtained cannot be negative")
     private Double marksObtained;
 
+    @PositiveOrZero(message = "Max marks cannot be negative")
     private Double maxMarks;
 }
