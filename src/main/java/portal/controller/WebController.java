@@ -1,5 +1,4 @@
 package portal.controller;
-import jakarta.validation.Valid;
 import portal.model.Student;
 import portal.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,9 +88,6 @@ public class WebController {
         return "redirect:/login";
     }
     @PostMapping("/register")
-    public Student register(@Valid @RequestBody Student student) {
-        return studentService.registerStudent(student);
-    }
     public String processRegister(@RequestParam String name,
                                   @RequestParam String rollNumber,
                                   @RequestParam String department,
