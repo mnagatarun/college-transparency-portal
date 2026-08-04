@@ -2,35 +2,39 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - College Portal</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login — College Transparency Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow-sm" style="width: 400px;">
-        <div class="card-body p-4">
-            <h3 class="text-center mb-4">Student Login</h3>
+<div class="auth-wrap">
+    <div class="auth-card">
+        <h2 class="brand" style="margin-bottom:0.2rem;">Sign in</h2>
+        <p class="text-muted-inst" style="margin-bottom:1.5rem;">College Transparency Portal</p>
 
-            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${error}" class="alert-inst alert-danger-inst" th:text="${error}"></div>
 
-            <form th:action="@{/login}" method="post">
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-            <p class="text-center mt-2"><a th:href="@{/forgot-password}">Forgot password?</a></p>
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary-inst w-100" style="margin-top:0.5rem;">Sign in</button>
+        </form>
 
-            <p class="text-center mt-3">
-                Don't have an account? <a th:href="@{/register}">Register here</a>
-            </p>
-        </div>
+        <p class="text-center mt-3" style="font-size:0.85rem;">
+            <a th:href="@{/forgot-password}">Forgot password?</a>
+        </p>
+        <hr style="border-color:var(--border); margin:1.25rem 0;">
+        <p class="text-center" style="font-size:0.85rem;">
+            New here? <a th:href="@{/register}">Create a student account</a>
+        </p>
     </div>
 </div>
 

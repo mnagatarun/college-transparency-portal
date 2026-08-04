@@ -1,0 +1,206 @@
+:root {
+    --ink: #16233E;
+    --ink-light: #2A3B5C;
+    --paper: #F5F6F8;
+    --paper-card: #FFFFFF;
+    --brass: #B8935F;
+    --brass-dark: #96754A;
+    --text: #1E2430;
+    --text-muted: #5B6472;
+    --crimson: #C13B3B;
+    --green: #2E7D5B;
+    --amber: #B8862F;
+    --border: #DDE1E7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4, .brand {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.mono, .badge, .id-col, table td.mono {
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Navbar */
+.navbar-institutional {
+    background: var(--ink);
+    padding: 0.9rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--brass);
+}
+.navbar-institutional .brand {
+    color: #fff;
+    font-size: 1.25rem;
+    margin: 0;
+}
+.navbar-institutional .brand small {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--brass);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--brass); color: var(--brass); }
+
+.page-wrap { max-width: 1080px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+/* Cards */
+.card-doc {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brass);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+}
+.card-doc h5 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    margin-bottom: 1.1rem;
+    color: var(--ink);
+}
+.auth-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--brass);
+    border-radius: 4px;
+    padding: 2.25rem;
+    width: 420px;
+}
+
+/* Forms */
+.form-control, .form-select {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.9rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--brass);
+    box-shadow: 0 0 0 3px rgba(184,147,95,0.15);
+}
+.form-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+/* Buttons */
+.btn-primary-inst {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.btn-primary-inst:hover { background: var(--ink-light); color: #fff; }
+.btn-brass {
+    background: var(--brass);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.btn-brass:hover { background: var(--brass-dark); color: #fff; }
+
+/* Stamp badges — the signature element */
+.stamp {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.22rem 0.6rem;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+    transform: rotate(-1deg);
+}
+.stamp-approved, .stamp-verified, .stamp-active { color: var(--green); }
+.stamp-pending { color: var(--amber); }
+.stamp-urgent, .stamp-overdue, .stamp-rejected, .stamp-disabled { color: var(--crimson); }
+
+/* Tables */
+table.doc-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+table.doc-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--ink);
+    padding: 0.5rem 0.6rem;
+}
+table.doc-table td {
+    padding: 0.6rem;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Metric card */
+.metric-card {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 4px;
+    padding: 1.4rem 1.6rem;
+}
+.metric-card .label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brass);
+    font-weight: 600;
+}
+.metric-card .value {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem;
+    margin-top: 0.2rem;
+}
+
+.alert-inst {
+    border-radius: 3px;
+    padding: 0.75rem 1rem;
+    font-size: 0.87rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid;
+}
+.alert-danger-inst { background: #FBEAEA; border-color: var(--crimson); color: #7A2626; }
+.alert-info-inst { background: #EEF1F6; border-color: var(--ink); color: var(--ink); }
+
+a { color: var(--brass-dark); }
+a:hover { color: var(--ink); }
+
+.text-muted-inst { color: var(--text-muted); font-size: 0.85rem; }

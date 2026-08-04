@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import portal.service.AttendanceService;
 import portal.service.MarksService;
+import portal.service.OutpassService;
+import java.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 import portal.service.PasswordResetService;
 import portal.service.OutpassService;
 
@@ -31,6 +34,22 @@ public class WebController {
             model.addAttribute("message", "If that email exists, a reset link was sent.");
         }
         return "forgot-password";
+    }
+    @PostMapping("/outpass/request")
+    public String requestOutpass(HttpSession session,
+                                 @RequestParam String reason,
+                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime outTime,
+                                 Model model) {
+        Long studentId = (Long) session.getAttribute("loggedInStudentId");
+        if (studentId == null) {
+            return "redirect:/login";
+        }
+        try {
+            outpassService.requestOutpass(studentId, reason, outTime);
+        } catch (RuntimeException e) {
+            model.addAttribute("outpassError", e.getMessage());
+        }
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/reset-password")

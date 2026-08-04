@@ -2,140 +2,117 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Faculty Portal - College Portal</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Faculty Portal — College Transparency Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body>
 
-<nav class="navbar navbar-dark bg-dark px-4">
-    <span class="navbar-brand mb-0 h1">Faculty Portal - <span th:text="${facultyName}"></span></span>
-    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+<nav class="navbar-institutional">
+    <div>
+        <p class="brand">Faculty Portal<small th:text="${facultyName}"></small></p>
+    </div>
+    <a th:href="@{/logout}" class="btn-ghost">Logout</a>
 </nav>
 
-<div class="container mt-4 mb-5">
+<div class="page-wrap">
 
     <div class="row">
-
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Mark Attendance</h5>
-                    <form th:action="@{/faculty/attendance/mark}" method="post">
-                        <select name="studentId" class="form-select mb-2" required>
-                            <option value="">Select Student</option>
-                            <option th:each="s : ${studentList}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'"></option>
-                        </select>
-                        <input type="text" name="subject" class="form-control mb-2" placeholder="Subject" required>
-                        <input type="date" name="date" class="form-control mb-2" required>
-                        <select name="status" class="form-select mb-2" required>
-                            <option value="PRESENT">Present</option>
-                            <option value="ABSENT">Absent</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary w-100">Mark Attendance</button>
-                    </form>
-                </div>
+        <div class="col-md-6 mb-3">
+            <div class="card-doc">
+                <h5>Mark Attendance</h5>
+                <form th:action="@{/faculty/attendance/mark}" method="post">
+                    <select name="studentId" class="form-select mb-2" required>
+                        <option value="">Select student</option>
+                        <option th:each="s : ${studentList}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'"></option>
+                    </select>
+                    <input type="text" name="subject" class="form-control mb-2" placeholder="Subject" required>
+                    <input type="date" name="date" class="form-control mb-2" required>
+                    <select name="status" class="form-select mb-3" required>
+                        <option value="PRESENT">Present</option>
+                        <option value="ABSENT">Absent</option>
+                    </select>
+                    <button type="submit" class="btn-primary-inst w-100">Mark Attendance</button>
+                </form>
             </div>
         </div>
 
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Add / Update Marks</h5>
-                    <form th:action="@{/faculty/marks/add}" method="post">
-                        <select name="studentId" class="form-select mb-2" required>
-                            <option value="">Select Student</option>
-                            <option th:each="s : ${studentList}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'"></option>
-                        </select>
-                        <input type="text" name="subject" class="form-control mb-2" placeholder="Subject" required>
-                        <select name="examType" class="form-select mb-2" required>
-                            <option value="MID1">MID1</option>
-                            <option value="MID2">MID2</option>
-                        </select>
-                        <input type="number" step="0.5" name="marksObtained" class="form-control mb-2" placeholder="Marks Obtained" required>
-                        <input type="number" step="0.5" name="maxMarks" class="form-control mb-2" placeholder="Max Marks" required>
-                        <input type="hidden" name="changedBy" th:value="${facultyName}">
-                        <button type="submit" class="btn btn-success w-100">Save Marks</button>
-                    </form>
-                </div>
+        <div class="col-md-6 mb-3">
+            <div class="card-doc">
+                <h5>Add / Update Marks</h5>
+                <form th:action="@{/faculty/marks/add}" method="post">
+                    <select name="studentId" class="form-select mb-2" required>
+                        <option value="">Select student</option>
+                        <option th:each="s : ${studentList}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'"></option>
+                    </select>
+                    <input type="text" name="subject" class="form-control mb-2" placeholder="Subject" required>
+                    <select name="examType" class="form-select mb-2" required>
+                        <option value="MID1">MID1</option>
+                        <option value="MID2">MID2</option>
+                    </select>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6"><input type="number" step="0.5" name="marksObtained" class="form-control" placeholder="Obtained" required></div>
+                        <div class="col-6"><input type="number" step="0.5" name="maxMarks" class="form-control" placeholder="Max" required></div>
+                    </div>
+                    <input type="hidden" name="changedBy" th:value="${facultyName}">
+                    <button type="submit" class="btn-brass w-100">Save Marks</button>
+                </form>
             </div>
         </div>
-
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Pending Outpass Requests</h5>
-            <table class="table table-sm">
-                <thead>
-                <tr>
-                    <th>Student</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="o : ${pendingOutpass}">
-                    <td th:text="${o.student.name}"></td>
-                    <td th:text="${o.reason}"></td>
-                    <td>
-                        <span th:text="${o.status}"
-                              th:class="${o.status == 'PENDING_URGENT'} ? 'badge bg-danger' : 'badge bg-warning'"></span>
-                    </td>
-                    <td>
-                        <form th:action="@{'/faculty/outpass/approve/' + ${o.id}}" method="post" style="display:inline;">
-                            <input type="hidden" name="approvedBy" th:value="${facultyName}">
-                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                        </form>
-                        <form th:action="@{'/faculty/outpass/reject/' + ${o.id}}" method="post" style="display:inline;">
-                            <input type="hidden" name="approvedBy" th:value="${facultyName}">
-                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(pendingOutpass)}">
-                    <td colspan="4" class="text-muted">No pending outpass requests.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="card-doc">
+        <h5>Pending Outpass Requests</h5>
+        <table class="doc-table">
+            <thead><tr><th>Student</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+            <tr th:each="o : ${pendingOutpass}">
+                <td th:text="${o.student.name}"></td>
+                <td th:text="${o.reason}"></td>
+                <td>
+                    <span class="stamp" th:text="${o.status}"
+                          th:classappend="${o.status == 'PENDING_URGENT'} ? 'stamp-urgent' : 'stamp-pending'"></span>
+                </td>
+                <td>
+                    <form th:action="@{'/faculty/outpass/approve/' + ${o.id}}" method="post" style="display:inline;">
+                        <input type="hidden" name="approvedBy" th:value="${facultyName}">
+                        <button type="submit" class="btn-brass" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Approve</button>
+                    </form>
+                    <form th:action="@{'/faculty/outpass/reject/' + ${o.id}}" method="post" style="display:inline;">
+                        <input type="hidden" name="approvedBy" th:value="${facultyName}">
+                        <button type="submit" class="btn-ghost" style="border-color:var(--crimson); color:var(--crimson); padding:0.3rem 0.8rem; font-size:0.8rem;">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(pendingOutpass)}"><td colspan="4" class="text-muted-inst">No pending requests.</td></tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Submission Tracking</h5>
-            <table class="table table-sm">
-                <thead>
-                <tr>
-                    <th>Student</th>
-                    <th>Title</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="sub : ${submissionDashboard}">
-                    <td th:text="${sub.student.name}"></td>
-                    <td th:text="${sub.title}"></td>
-                    <td th:text="${sub.dueDate}"></td>
-                    <td>
-                        <span th:text="${sub.status}"
-                              th:class="${sub.status == 'OVERDUE'} ? 'badge bg-danger' : 'badge bg-warning'"></span>
-                    </td>
-                    <td>
-                        <form th:if="${sub.status == 'SUBMITTED'}" th:action="@{'/faculty/submissions/verify/' + ${sub.id}}" method="post">
-                            <input type="hidden" name="verifiedBy" th:value="${facultyName}">
-                            <button type="submit" class="btn btn-sm btn-primary">Verify</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(submissionDashboard)}">
-                    <td colspan="5" class="text-muted">No submissions to track.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="card-doc">
+        <h5>Submission Tracking</h5>
+        <table class="doc-table">
+            <thead><tr><th>Student</th><th>Title</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+            <tr th:each="sub : ${submissionDashboard}">
+                <td th:text="${sub.student.name}"></td>
+                <td th:text="${sub.title}"></td>
+                <td class="mono" th:text="${sub.dueDate}"></td>
+                <td>
+                    <span class="stamp" th:text="${sub.status}"
+                          th:classappend="${sub.status == 'OVERDUE'} ? 'stamp-overdue' : 'stamp-pending'"></span>
+                </td>
+                <td>
+                    <form th:if="${sub.status == 'SUBMITTED'}" th:action="@{'/faculty/submissions/verify/' + ${sub.id}}" method="post">
+                        <input type="hidden" name="verifiedBy" th:value="${facultyName}">
+                        <button type="submit" class="btn-primary-inst" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Verify</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(submissionDashboard)}"><td colspan="5" class="text-muted-inst">No submissions to track.</td></tr>
+            </tbody>
+        </table>
     </div>
 
 </div>

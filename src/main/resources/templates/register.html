@@ -2,46 +2,49 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Register - College Portal</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Register — College Transparency Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow-sm" style="width: 450px;">
-        <div class="card-body p-4">
-            <h3 class="text-center mb-4">Student Registration</h3>
+<div class="auth-wrap">
+    <div class="auth-card" style="width:460px;">
+        <h2 class="brand" style="margin-bottom:0.2rem;">Student registration</h2>
+        <p class="text-muted-inst" style="margin-bottom:1.5rem;">Create your portal account</p>
 
-            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${error}" class="alert-inst alert-danger-inst" th:text="${error}"></div>
 
-            <form th:action="@{/register}" method="post">
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Roll Number</label>
+        <form th:action="@{/register}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Full name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <label class="form-label">Roll number</label>
                     <input type="text" name="rollNumber" class="form-control" required>
                 </div>
-                <div class="mb-3">
+                <div class="col-6">
                     <label class="form-label">Department</label>
                     <input type="text" name="department" class="form-control" required>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-success w-100">Register</button>
-            </form>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required minlength="6">
+            </div>
+            <button type="submit" class="btn-primary-inst w-100" style="margin-top:0.5rem;">Create account</button>
+        </form>
 
-            <p class="text-center mt-3">
-                Already have an account? <a th:href="@{/login}">Login here</a>
-            </p>
-        </div>
+        <p class="text-center mt-3" style="font-size:0.85rem;">
+            Already registered? <a th:href="@{/login}">Sign in</a>
+        </p>
     </div>
 </div>
 
