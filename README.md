@@ -112,4 +112,4 @@ Deployed via Docker on Render, with MySQL hosted on Railway. Both services use e
 
 ## Author
 
-M.NagaTarun — B.Tech CSE, Prasad V. Potluri Siddhartha Institute of Technology
+M.NagaTarun — B.Tech IT, Prasad V. Potluri Siddhartha Institute of Technology
